@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# home path fix for sed
-home_replacer=""
 fzf_tmux_options=${FZF_TMUX_OPTS:-"-p 60%"}
-[[ "$HOME" =~ ^[a-zA-Z0-9\-_/.@]+$ ]] && home_replacer="s|^$HOME/|~/|"
+home_replacer="s|^$HOME/|~/|"
 
 preview_position_option=$(tmux show-option -gqv "@tea-preview-position")
 preview_position=${preview_position_option:-"right"}
@@ -23,9 +21,9 @@ header="^j   ^s   ^w   ^x "
 t_bind="ctrl-t:abort"
 tab_bind="tab:down,btab:up"
 session_bind="ctrl-s:change-prompt(  )+reload(tmux list-sessions -F '#S')"
-zoxide_bind="ctrl-j:change-prompt(  )+reload(zoxide query -l | sed \"s|^$HOME|~|\")+change-preview(eval $dir_preview_cmd {})"
+zoxide_bind="ctrl-j:change-prompt(  )+reload(zoxide query -l | sed -e \"$home_replacer\")+change-preview(eval $dir_preview_cmd {})"
 window_bind="ctrl-w:change-prompt(  )+reload(tmux list-windows -a -F '#{session_name}:#{window_index}')+change-preview($session_preview_cmd {})"
-kill_bind="ctrl-x:change-prompt(  )+execute-silent(tmux kill-session -t {})+reload-sync(tmux list-sessions -F '#S' && zoxide query -l | sed \"s|^$HOME|~|\")"
+kill_bind="ctrl-x:change-prompt(  )+execute-silent(tmux kill-session -t {})+reload-sync(tmux list-sessions -F '#S' && zoxide query -l | sed -e \"$home_replacer\")"
 
 # determine if the tmux server is running
 tmux_running=1

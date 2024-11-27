@@ -2,7 +2,7 @@
 
 # home path fix for sed
 home_replacer=""
-fzf_tmux_options=${FZF_TMUX_OPTS:-"-p 90%"}
+fzf_tmux_options=${FZF_TMUX_OPTS:-"-p 70%"}
 [[ "$HOME" =~ ^[a-zA-Z0-9\-_/.@]+$ ]] && home_replacer="s|^$HOME/|~/|"
 
 preview_position_option=$(tmux show-option -gqv "@tea-preview-position")
@@ -12,20 +12,19 @@ layout_option=$(tmux show-option -gqv "@tea-layout")
 layout=${layout_option:-"reverse"}
 
 session_preview_cmd="tmux capture-pane -ep -t"
-dir_preview_cmd="eza -ahlT -L=2 -s=extension --group-directories-first --icons --git --git-ignore --no-user --color=always --color-scale=all --color-scale-mode=gradient"
+dir_preview_cmd="ll"
 preview="$session_preview_cmd {} 2&>/dev/null || eval $dir_preview_cmd {}"
 
 prompt='  '
 marker=''
 border_label='   tmux-tea   '
-header="^f   ^j   ^s   ^w   ^x "
+header="^j   ^s   ^w   ^x "
 
 t_bind="ctrl-t:abort"
 tab_bind="tab:down,btab:up"
-session_bind="ctrl-s:change-prompt(  )+reload(tmux list-sessions -F '#S')+change-preview-window($preview_position,85%)"
-zoxide_bind="ctrl-j:change-prompt(  )+reload(zoxide query -l | sed -e \"$home_replacer\")+change-preview(eval $dir_preview_cmd {})+change-preview-window(right)"
-find_bind="ctrl-f:change-prompt(  )+reload(fd -H -d 2 -t d . ~)+change-preview($dir_preview_cmd {})+change-preview-window(right)"
-window_bind="ctrl-w:change-prompt(  )+reload(tmux list-windows -a -F '#{session_name}:#{window_index}')+change-preview($session_preview_cmd {})+change-preview-window($preview_position)"
+session_bind="ctrl-s:change-prompt(  )+reload(tmux list-sessions -F '#S')"
+zoxide_bind="ctrl-j:change-prompt(  )+reload(zoxide query -l | sed -e \"$home_replacer\")+change-preview(eval $dir_preview_cmd {})"
+window_bind="ctrl-w:change-prompt(  )+reload(tmux list-windows -a -F '#{session_name}:#{window_index}')+change-preview($session_preview_cmd {})"
 kill_bind="ctrl-x:change-prompt(  )+execute-silent(tmux kill-session -t {})+reload-sync(tmux list-sessions -F '#S' && zoxide query -l | sed -e \"$home_replacer\")"
 
 # determine if the tmux server is running

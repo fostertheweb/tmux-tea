@@ -20,7 +20,6 @@ marker='*'
 border_label=' sessions '
 header="^j   ^s   ^w   ^x "
 
-sed 's|^/Users/jonathan|~|'
 t_bind="ctrl-t:abort"
 tab_bind="tab:down,btab:up"
 session_bind="ctrl-s:change-prompt(  )+reload(tmux list-sessions -F '#S')"

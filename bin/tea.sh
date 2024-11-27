@@ -12,7 +12,7 @@ layout_option=$(tmux show-option -gqv "@tea-layout")
 layout=${layout_option:-"reverse"}
 
 session_preview_cmd="tmux capture-pane -ep -t"
-dir_preview_cmd="ll"
+dir_preview_cmd="eza -la"
 preview="$session_preview_cmd {} 2&>/dev/null || eval $dir_preview_cmd {}"
 
 prompt=' : '

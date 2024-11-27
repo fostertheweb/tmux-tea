@@ -2,11 +2,11 @@
 
 # home path fix for sed
 home_replacer=""
-fzf_tmux_options=${FZF_TMUX_OPTS:-"-p 50%"}
+fzf_tmux_options=${FZF_TMUX_OPTS:-"-p 60%"}
 [[ "$HOME" =~ ^[a-zA-Z0-9\-_/.@]+$ ]] && home_replacer="s|^$HOME/|~/|"
 
 preview_position_option=$(tmux show-option -gqv "@tea-preview-position")
-preview_position=${preview_position_option:-"top"}
+preview_position=${preview_position_option:-"right"}
 
 layout_option=$(tmux show-option -gqv "@tea-layout")
 layout=${layout_option:-"reverse"}
@@ -20,12 +20,13 @@ marker='*'
 border_label=' sessions '
 header="^j   ^s   ^w   ^x "
 
+sed 's|^/Users/jonathan|~|'
 t_bind="ctrl-t:abort"
 tab_bind="tab:down,btab:up"
 session_bind="ctrl-s:change-prompt(  )+reload(tmux list-sessions -F '#S')"
-zoxide_bind="ctrl-j:change-prompt(  )+reload(zoxide query -l | sed -e \"$home_replacer\")+change-preview(eval $dir_preview_cmd {})"
+zoxide_bind="ctrl-j:change-prompt(  )+reload(zoxide query -l | sed \"s|^$HOME|~|\")+change-preview(eval $dir_preview_cmd {})"
 window_bind="ctrl-w:change-prompt(  )+reload(tmux list-windows -a -F '#{session_name}:#{window_index}')+change-preview($session_preview_cmd {})"
-kill_bind="ctrl-x:change-prompt(  )+execute-silent(tmux kill-session -t {})+reload-sync(tmux list-sessions -F '#S' && zoxide query -l | sed -e \"$home_replacer\")"
+kill_bind="ctrl-x:change-prompt(  )+execute-silent(tmux kill-session -t {})+reload-sync(tmux list-sessions -F '#S' && zoxide query -l | sed \"s|^$HOME|~|\")"
 
 # determine if the tmux server is running
 tmux_running=1
@@ -74,14 +75,14 @@ else
             --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
             --bind "$zoxide_bind" --bind "$kill_bind" --border-label "$border_label" --header "$header" \
             --no-sort --prompt "$prompt" --marker "$marker" --preview "$preview" \
-            --preview-window="$preview_position",65% "$fzf_tmux_options" --layout="$layout")
+            --preview-window="$preview_position",60% "$fzf_tmux_options" --layout="$layout")
         ;;
     detached)
         result=$(get_fzf_results | fzf \
             --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
             --bind "$zoxide_bind" --bind "$kill_bind" --border-label "$border_label" --header "$header" \
             --no-sort --prompt "$prompt" --marker "$marker" --preview "$preview" \
-            --preview-window=top,45%)
+            --preview-window=top,60%)
         ;;
     serverless)
         result=$(get_fzf_results | fzf \

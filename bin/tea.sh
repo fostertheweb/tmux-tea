@@ -71,21 +71,21 @@ else
     case $run_type in
     attached)
         result=$(get_fzf_results | fzf-tmux \
-            --bind "$find_bind" --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
+            --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
             --bind "$zoxide_bind" --bind "$kill_bind" --border-label "$border_label" --header "$header" \
             --no-sort --prompt "$prompt" --marker "$marker" --preview "$preview" \
             --preview-window="$preview_position",75% "$fzf_tmux_options" --layout="$layout")
         ;;
     detached)
         result=$(get_fzf_results | fzf \
-            --bind "$find_bind" --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
+            --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
             --bind "$zoxide_bind" --bind "$kill_bind" --border-label "$border_label" --header "$header" \
             --no-sort --prompt "$prompt" --marker "$marker" --preview "$preview" \
             --preview-window=top,75%)
         ;;
     serverless)
         result=$(get_fzf_results | fzf \
-            --bind "$find_bind" --bind "$tab_bind" --bind "$zoxide_bind" --bind "$kill_bind" --bind "$t_bind" \
+            --bind "$tab_bind" --bind "$zoxide_bind" --bind "$kill_bind" --bind "$t_bind" \
             --border-label "$border_label" --header "$header" --no-sort --prompt "$prompt" --marker "$marker" \
             --preview "$dir_preview_cmd {}")
         ;;

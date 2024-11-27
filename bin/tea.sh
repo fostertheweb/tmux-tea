@@ -2,7 +2,7 @@
 
 # home path fix for sed
 home_replacer=""
-fzf_tmux_options=${FZF_TMUX_OPTS:-"-p 70%"}
+fzf_tmux_options=${FZF_TMUX_OPTS:-"-p 50%"}
 [[ "$HOME" =~ ^[a-zA-Z0-9\-_/.@]+$ ]] && home_replacer="s|^$HOME/|~/|"
 
 preview_position_option=$(tmux show-option -gqv "@tea-preview-position")
@@ -15,9 +15,9 @@ session_preview_cmd="tmux capture-pane -ep -t"
 dir_preview_cmd="ll"
 preview="$session_preview_cmd {} 2&>/dev/null || eval $dir_preview_cmd {}"
 
-prompt='  '
-marker=''
-border_label='   tmux-tea   '
+prompt=' : '
+marker='*'
+border_label=' sessions '
 header="^j   ^s   ^w   ^x "
 
 t_bind="ctrl-t:abort"

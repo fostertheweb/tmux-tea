@@ -12,6 +12,7 @@ layout=${layout_option:-"reverse"}
 session_preview_cmd="tmux capture-pane -ep -t"
 dir_preview_cmd="eza --oneline --icons --git --git-ignore --no-user --color=always --color-scale=all --color-scale-mode=gradient"
 preview="$session_preview_cmd {} 2&>/dev/null || eval $dir_preview_cmd {}"
+find_comd="fd -H -d 4 -t d . ~/Developer --exec bash -c '[ -d \"$1/.git\" ] && echo $1' _ {}"
 
 prompt=' : '
 marker='*'
@@ -20,7 +21,7 @@ header="C-f   C-j   C-s   C-w "
 
 t_bind="ctrl-t:abort"
 tab_bind="tab:down,btab:up"
-find_bind="ctrl-f:change-prompt( : )+reload(fd -H -d 4 -t d . ~/Developer --exec bash -c '[ -d \"$1/.git\" ] && echo $1' _ {} | sed -e \"$home_replacer\")+change-preview($dir_preview_cmd {})"
+find_bind="ctrl-f:change-prompt( : )+reload(eval $find_cmd | sed -e \"$home_replacer\")+change-preview($dir_preview_cmd {})"
 session_bind="ctrl-s:change-prompt( : )+reload(tmux list-sessions -F '#S')"
 zoxide_bind="ctrl-j:change-prompt( : )+reload(zoxide query -l | sed -e \"$home_replacer\")+change-preview(eval $dir_preview_cmd {})"
 window_bind="ctrl-w:change-prompt( : )+reload(tmux list-windows -a -F '#{session_name}:#{window_index}')+change-preview($session_preview_cmd {})"

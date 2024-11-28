@@ -16,14 +16,14 @@ preview="$session_preview_cmd {} 2&>/dev/null || eval $dir_preview_cmd {}"
 prompt=' : '
 marker='*'
 border_label=' sessions '
-header="^j   ^s   ^w   ^x "
+header="C-f   C-j   C-s   C-w "
 
 t_bind="ctrl-t:abort"
 tab_bind="tab:down,btab:up"
-session_bind="ctrl-s:change-prompt(  )+reload(tmux list-sessions -F '#S')"
-zoxide_bind="ctrl-j:change-prompt(  )+reload(zoxide query -l | sed -e \"$home_replacer\")+change-preview(eval $dir_preview_cmd {})"
-window_bind="ctrl-w:change-prompt(  )+reload(tmux list-windows -a -F '#{session_name}:#{window_index}')+change-preview($session_preview_cmd {})"
-kill_bind="ctrl-x:change-prompt(  )+execute-silent(tmux kill-session -t {})+reload-sync(tmux list-sessions -F '#S' && zoxide query -l | sed -e \"$home_replacer\")"
+find_bind="ctrl-f:change-prompt( : )+reload(fd -H -d 2 -t d . ~)+change-preview($dir_preview_cmd {})"
+session_bind="ctrl-s:change-prompt( : )+reload(tmux list-sessions -F '#S')"
+zoxide_bind="ctrl-j:change-prompt( : )+reload(zoxide query -l | sed -e \"$home_replacer\")+change-preview(eval $dir_preview_cmd {})"
+window_bind="ctrl-w:change-prompt( : )+reload(tmux list-windows -a -F '#{session_name}:#{window_index}')+change-preview($session_preview_cmd {})"
 
 # determine if the tmux server is running
 tmux_running=1
@@ -70,20 +70,20 @@ else
     attached)
         result=$(get_fzf_results | fzf-tmux \
             --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
-            --bind "$zoxide_bind" --bind "$kill_bind" --border-label "$border_label" --header "$header" \
+            --bind "$zoxide_bind" --bind "$find_bind" --border-label "$border_label" --header "$header" \
             --no-sort --prompt "$prompt" --marker "$marker" --preview "$preview" \
             --preview-window="$preview_position",60% "$fzf_tmux_options" --layout="$layout")
         ;;
     detached)
         result=$(get_fzf_results | fzf \
             --bind "$session_bind" --bind "$tab_bind" --bind "$window_bind" --bind "$t_bind" \
-            --bind "$zoxide_bind" --bind "$kill_bind" --border-label "$border_label" --header "$header" \
+            --bind "$zoxide_bind" --bind "$find_bind" --border-label "$border_label" --header "$header" \
             --no-sort --prompt "$prompt" --marker "$marker" --preview "$preview" \
             --preview-window=top,60%)
         ;;
     serverless)
         result=$(get_fzf_results | fzf \
-            --bind "$tab_bind" --bind "$zoxide_bind" --bind "$kill_bind" --bind "$t_bind" \
+            --bind "$tab_bind" --bind "$zoxide_bind" --bind "$find_bind" --bind "$t_bind" \
             --border-label "$border_label" --header "$header" --no-sort --prompt "$prompt" --marker "$marker" \
             --preview "$dir_preview_cmd {}")
         ;;
